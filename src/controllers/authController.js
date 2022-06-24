@@ -28,7 +28,7 @@ router.post('/register', async function(req, res){
 });
 
 router.get('/login', function(req, res){
-    res.render('login');
+    res.render('auth/login');
 });
 
 router.post('/login', async function(req, res){
