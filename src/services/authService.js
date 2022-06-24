@@ -4,20 +4,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/constants');
 
-exports.register = async (username, password, repeatPassword) => {
-    if(User.findOne({ username })){
-        throw{
-            message: 'This username is taken'
-        }
-    }
-
-    const createdUser = await User.create({ username, password, repeatPassword });
+exports.register = async (userData) => {
+    const createdUser = await User.create(userData);
 
     return createdUser; 
 };
 
-exports.login = async (username, password) => {
-    let user = await User.findOne({ username });
+exports.login = async (email, password) => {
+    let user = await User.findOne({ email });
+
+    console.log(user);
 
     if (!user) {
         throw {

@@ -3,15 +3,23 @@ const bcrypt = require('bcrypt');
 const { SALT_ROUNDS } = require('../config/constants');
 
 const userSchema = new mongoose.Schema({
-    username: {
+    email: {
         type: String,
         required: true,
-        unique: true
     },
     password: {
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        required: true,
+        enum: ['Male', 'Female']
+    },
+    tripHistory: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'Trip',
+    }]
 });
 
 userSchema.virtual('repeatPassword').set(function(value) {

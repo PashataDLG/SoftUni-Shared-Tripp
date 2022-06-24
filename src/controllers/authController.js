@@ -3,19 +3,17 @@ const router = require('express').Router();
 const authService = require('../services/authService');
 const { SESSION_NAME } = require('../config/constants');
 
-router.get('/register', function(req, res) {
+router.get('/register', function (req, res) {
     res.render('auth/register');
 });
 
-router.post('/register', async function(req, res){
-    let { username, password, repeatPassword } = req.body;
-
+router.post('/register', async function (req, res) {
+    const { email, password } = req.body;
     try {
-        await authService.register(username, password, repeatPassword);
-        
-        const token = await authService.login(username, password);
+        await authService.register(req.body);
+        const token = await authService.login(email, password);
 
-        if(!token){
+        if (!token) {
             return res.status(404);
         }
 
@@ -23,20 +21,20 @@ router.post('/register', async function(req, res){
         res.redirect('/');
 
     } catch (err) {
-        res.status(404).render('auth/register', {error: err.message});
+        res.status(404).render('auth/register', { error: err.message });
     }
 });
 
-router.get('/login', function(req, res){
+router.get('/login', function (req, res) {
     res.render('auth/login');
 });
 
-router.post('/login', async function(req, res){
-    const { username, password } = req.body;
+router.post('/login', async function (req, res) {
+    const { email, password } = req.body;
     try {
-        let token = await authService.login(username, password);
+        let token = await authService.login(email, password);
 
-        if(!token){
+        if (!token) {
             return res.status(404);
         }
 
@@ -46,12 +44,12 @@ router.post('/login', async function(req, res){
     } catch (err) {
         res.status(400).render('login', { error: err.message });
     }
-    
+
 });
 
-router.get('/logout', function(req, res){
+router.get('/logout', function (req, res) {
     res.clearCookie(SESSION_NAME);
     res.redirect('/');
-}); 
+});
 
 module.exports = router;
