@@ -13,8 +13,6 @@ exports.register = async (userData) => {
 exports.login = async (email, password) => {
     let user = await User.findOne({ email });
 
-    console.log(user);
-
     if (!user) {
         throw {
             message: 'Invalid username or password'
@@ -29,7 +27,7 @@ exports.login = async (email, password) => {
         };
     }
 
-    let payload = { _id: user._id, username: user.username };
+    let payload = { _id: user._id, email: user.email };
 
     let result = new Promise((resolve, reject) => {
         jwt.sign(payload, SECRET, { expiresIn: '2d' }, (err, token) => {
